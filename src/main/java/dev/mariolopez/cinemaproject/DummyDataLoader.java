@@ -6,17 +6,17 @@ import dev.mariolopez.cinemaproject.services.DataManager;
 
 public class DummyDataLoader {
 
-    public static void loadDummyData() {
+    public static void loadDummyData() {  // Carga de datos de prueba
         DataManager dataManager = DataManager.getInstance();
 
         // Crear algunas productoras
         Productora productora1 = new Productora(dataManager.getNextProductoraId(), "Warner Bros.", 10);
-        Productora productora2 = new Productora(dataManager.getNextProductoraId(), "Universal Pictures", 10);
-        Productora productora3 = new Productora(dataManager.getNextProductoraId(), "Columbia Pictures", 10);
-
-        // Agregar productoras al DataManager
         dataManager.addProductora(productora1);
+
+        Productora productora2 = new Productora(dataManager.getNextProductoraId(), "Universal Pictures", 10);
         dataManager.addProductora(productora2);
+
+        Productora productora3 = new Productora(dataManager.getNextProductoraId(), "Columbia Pictures", 10);
         dataManager.addProductora(productora3);
 
         // Crear algunas películas y asignarlas a productoras

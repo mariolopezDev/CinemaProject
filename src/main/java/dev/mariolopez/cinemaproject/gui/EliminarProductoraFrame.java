@@ -7,16 +7,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class EliminarProductoraFrame extends JFrame {
+public class EliminarProductoraFrame extends BaseFrame {
     private JButton btnEliminar;
     private JTable tablaProductoras;
     private DefaultTableModel modeloTabla;
 
     public EliminarProductoraFrame() {
-        setTitle("Eliminar Productoras");
-        setSize(500, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
+        super("Eliminar Productoras", 500, 300);
 
         btnEliminar = new JButton("Eliminar Última Productora");
         btnEliminar.addActionListener(e -> eliminarProductora());
@@ -31,12 +28,21 @@ public class EliminarProductoraFrame extends JFrame {
     }
 
     private void eliminarProductora() {
-        if (DataManager.getInstance().removeLastProductora()) {
-            JOptionPane.showMessageDialog(this, "Última productora eliminada exitosamente.", "Eliminación Exitosa", JOptionPane.INFORMATION_MESSAGE);
-            updateTable();
+        if( DataManager.getInstance().getProductoras().length == 0) {
+            showStatusMessage("No hay productoras para eliminar.", Color.BLUE);
+            return;
+        } else if (DataManager.getInstance().hasPeliculas()) {
+            showStatusMessage("No se puede eliminar la última productora porque tiene películas.", Color.RED);
+            return;
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo eliminar la última productora. Puede tener películas asociadas o no hay productoras registradas.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+            boolean removed = DataManager.getInstance().removeLastProductora();
+            if (removed) {
+                showStatusMessage("Productora eliminada con éxito.", Color.RED);
+            } else {
+                showStatusMessage("No se pudo eliminar la productora.", Color.RED);
+            }
+        }   
+        updateTable();
     }
 
     private void updateTable() {

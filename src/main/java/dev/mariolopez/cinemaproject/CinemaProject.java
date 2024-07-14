@@ -10,10 +10,12 @@ public class CinemaProject {
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {
-            // Cargar datos de prueba
-            //DummyDataLoader.loadDummyData();
+
+            DummyDataLoader.loadDummyData(); // OPCIONAL: Carga de datos de prueba
             
-            new MainFrame().setVisible(true);
+            new MainFrame().setVisible(true); // Mostrar la ventana principal
         });
     }
 }
+
+

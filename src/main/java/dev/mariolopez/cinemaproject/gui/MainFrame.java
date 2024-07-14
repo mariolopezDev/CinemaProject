@@ -1,6 +1,8 @@
 package dev.mariolopez.cinemaproject.gui;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+
 import java.awt.*;
 
 public class MainFrame extends JFrame {
@@ -18,8 +20,10 @@ public class MainFrame extends JFrame {
         setTitle("Sistema de Gestión de Productoras Cinematográficas");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        setLayout(new BorderLayout(10, 10));  // Changed to BorderLayout
 
+        // Buttons Panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton btnRegistrarProductoras = new JButton("Registrar Productoras");
         JButton btnRegistrarPeliculas = new JButton("Registrar Películas");
         JButton btnEliminarPeliculas = new JButton("Eliminar Películas");
@@ -32,11 +36,34 @@ public class MainFrame extends JFrame {
         btnTrasladarPeliculas.addActionListener(e -> showTrasladarPeliculaFrame());
         btnEliminarProductoras.addActionListener(e -> showEliminarProductoraFrame());
 
-        add(btnRegistrarProductoras);
-        add(btnRegistrarPeliculas);
-        add(btnEliminarPeliculas);
-        add(btnTrasladarPeliculas);
-        add(btnEliminarProductoras);
+        buttonsPanel.add(btnRegistrarProductoras);
+        buttonsPanel.add(btnRegistrarPeliculas);
+        buttonsPanel.add(btnEliminarPeliculas);
+        buttonsPanel.add(btnTrasladarPeliculas);
+        buttonsPanel.add(btnEliminarProductoras);
+
+        add(buttonsPanel, BorderLayout.CENTER);
+
+        // Footer Panel
+        JPanel footerPanel = new JPanel();
+        footerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JEditorPane lblCredits = new JEditorPane("text/html", "<html>Desarrollado por Mario López - GitHub: <a href='https://github.com/mariolopezDev'>mariolopezDev</a></html>");
+        lblCredits.setEditable(false);
+        lblCredits.setOpaque(false);
+        lblCredits.addHyperlinkListener(e -> {
+            if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+                try {
+                    Desktop.getDesktop().browse(e.getURL().toURI());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        lblCredits.setFont(new Font("Helvetica", Font.PLAIN, 12));
+        footerPanel.add(lblCredits);
+        add(footerPanel, BorderLayout.SOUTH);
+
+
 
         setLocationRelativeTo(null);
     }

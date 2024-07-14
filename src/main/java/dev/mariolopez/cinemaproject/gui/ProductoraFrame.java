@@ -7,39 +7,41 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class ProductoraFrame extends JFrame {
+public class ProductoraFrame extends BaseFrame {
     private JTextField txtDescripcion;
     private JButton btnAgregar;
     private JTable tablaProductoras;
     private DefaultTableModel modeloTabla;
 
     public ProductoraFrame() {
-        initializeUI();
-    }
-
-    private void initializeUI() {
-        setTitle("Registro de Productoras");
-        setSize(500, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-
+        super("Registro de Productoras", 500, 300);
         add(createFormPanel(), BorderLayout.NORTH);
         add(createTablePanel(), BorderLayout.CENTER);
         pack();
-        setLocationRelativeTo(null);
         updateTable();
     }
 
     private JPanel createFormPanel() {
-        JPanel panel = new JPanel(new GridLayout(1, 2));
+        JPanel panel = new JPanel(new GridLayout(1, 3, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
         txtDescripcion = new JTextField();
+        txtDescripcion.setFont(new Font("SansSerif", Font.BOLD, 14)); 
+    
         btnAgregar = new JButton("Agregar Productora");
+        btnAgregar.setFont(new Font("SansSerif", Font.BOLD, 14)); 
         btnAgregar.addActionListener(e -> agregarProductora());
-        panel.add(new JLabel("Descripción:"));
+    
+        JLabel lblDescripcion = new JLabel("Descripción:");
+        lblDescripcion.setFont(new Font("SansSerif", Font.PLAIN, 14));  
+    
+        panel.add(lblDescripcion);
         panel.add(txtDescripcion);
         panel.add(btnAgregar);
+    
         return panel;
     }
+    
 
     private JScrollPane createTablePanel() {
         modeloTabla = new DefaultTableModel(new Object[]{"ID", "Descripción"}, 0);
@@ -53,9 +55,10 @@ public class ProductoraFrame extends JFrame {
             Productora productora = new Productora(DataManager.getInstance().getNextProductoraId(), descripcion, 10);
             DataManager.getInstance().addProductora(productora);
             updateTable();
+            showStatusMessage("Productora id " + productora.getId() + " - " + descripcion + " agregada con éxito.", Color.blue);
             txtDescripcion.setText("");
         } else {
-            JOptionPane.showMessageDialog(this, "La descripción no puede estar vacía.", "Error", JOptionPane.ERROR_MESSAGE);
+            showStatusMessage("La descripción no puede estar vacía.", Color.RED);
         }
     }
 

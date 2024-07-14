@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class PeliculaFrame extends JFrame {
+public class PeliculaFrame extends BaseFrame {
     private JComboBox<Productora> cbProductoras;
     private JTextField txtNombre;
     private JComboBox<String> cbGenero, cbTipoAudiencia;
@@ -17,17 +17,21 @@ public class PeliculaFrame extends JFrame {
     private DefaultTableModel modeloTabla;
 
     public PeliculaFrame() {
-        setTitle("Registro de Películas");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-
+        super("Registro de Películas", 600, 400);
         add(createSelectionPanel(), BorderLayout.NORTH);
-        add(createFormPanel(), BorderLayout.CENTER);
-        add(createTablePanel(), BorderLayout.SOUTH);
+
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.add(createFormPanel());
+        centerPanel.add(createTablePanel());
+
+        add(centerPanel, BorderLayout.CENTER);
+
         pack();
-        setLocationRelativeTo(null);
+        updateProductoraComboBox();
+        updatePeliculaTable();
     }
+
 
     private JPanel createSelectionPanel() {
         JPanel panel = new JPanel(new GridLayout(1, 2));
@@ -42,7 +46,7 @@ public class PeliculaFrame extends JFrame {
     private JPanel createFormPanel() {
         JPanel panel = new JPanel(new GridLayout(3, 2));
         txtNombre = new JTextField();
-        cbGenero = new JComboBox<>(new String[]{"Acción", "Aventura", "Catástrofe", "Ciencia Ficción", "Comedia",                                        "Documental", "Drama", "Fantasía", "Musical", "Suspenso", "Terror"});
+        cbGenero = new JComboBox<>(new String[]{"Acción", "Aventura", "Catástrofe", "Ciencia Ficción", "Comedia", "Documental", "Drama", "Fantasía", "Musical", "Suspenso", "Terror"});
         cbTipoAudiencia = new JComboBox<>(new String[]{"Infantiles", "Juveniles", "Adultos"});
         btnAgregar = new JButton("Agregar Película");
         btnAgregar.addActionListener(e -> agregarPelicula());
@@ -65,15 +69,21 @@ public class PeliculaFrame extends JFrame {
 
     private void agregarPelicula() {
         Productora productora = (Productora) cbProductoras.getSelectedItem();
-        if (productora != null && !txtNombre.getText().trim().isEmpty()) {
+        if (productora == null) {
+            showStatusMessage("Debe seleccionar una productora.", Color.RED);
+            return;
+        } else if (txtNombre.getText().trim().isEmpty()) {
+            showStatusMessage("Debe completar el nombre de la película.", Color.RED);
+            return;
+        } else {
             String genero = (String) cbGenero.getSelectedItem();
             String tipoAudiencia = (String) cbTipoAudiencia.getSelectedItem();
             Pelicula pelicula = new Pelicula(txtNombre.getText().trim(), genero, tipoAudiencia);
             productora.enqueuePelicula(pelicula);
             updatePeliculaTable();
             txtNombre.setText("");
-        } else {
-            JOptionPane.showMessageDialog(this, "Todos los campos deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
+            showStatusMessage("Película " + pelicula.getNombre() + " agregada con éxito.", Color.BLUE);
+            return;
         }
     }
 
@@ -82,8 +92,15 @@ public class PeliculaFrame extends JFrame {
         for (Productora productora : DataManager.getInstance().getProductoras()) {
             cbProductoras.addItem(productora);
         }
+        if (cbProductoras.getItemCount() > 0) {
+            cbProductoras.setSelectedIndex(0); // Asegura que siempre haya una productora seleccionada por defecto.
+            showStatusMessage(cbProductoras.getItemCount() + " productoras  disponibles para agregar películas.", Color.BLUE);
+        } else {
+            showStatusMessage("No hay productoras disponibles para agregar películas.", Color.RED);
+        }
     }
-
+    
+    
     private void updatePeliculaTable() {
         Productora productora = (Productora) cbProductoras.getSelectedItem();
         modeloTabla.setRowCount(0);
@@ -97,11 +114,11 @@ public class PeliculaFrame extends JFrame {
     }
     @Override
     public void setVisible(boolean visible) {
+        super.setVisible(visible);
         if (visible) {
             updateProductoraComboBox();
             updatePeliculaTable();
         }
-        super.setVisible(visible);
     }
 
     public static void main(String[] args) {

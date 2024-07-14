@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 
-public class TrasladarPeliculaFrame extends JFrame {
+public class TrasladarPeliculaFrame extends BaseFrame {
     private JComboBox<Productora> cbProductoraOrigen;
     private JComboBox<Productora> cbProductoraDestino;
     private JButton btnTrasladar;
@@ -17,11 +17,7 @@ public class TrasladarPeliculaFrame extends JFrame {
     private DefaultTableModel modeloTabla;
 
     public TrasladarPeliculaFrame() {
-        setTitle("Trasladar Películas");
-        setSize(700, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-
+        super("Trasladar Películas", 700, 400);
         add(createSelectionPanel(), BorderLayout.NORTH);
         add(createTablePanel(), BorderLayout.CENTER);
         pack();
@@ -77,11 +73,9 @@ public class TrasladarPeliculaFrame extends JFrame {
 
             actualizarTabla(origen);
             actualizarTabla(destino);
-
-            
-            JOptionPane.showMessageDialog(this, "Se trasladaron " + contador + " películas de " + origen + " a " + destino, "Traslado Exitoso", JOptionPane.INFORMATION_MESSAGE);
+            showStatusMessage(contador + " películas trasladadas de " + origen.getDescripcion() + " a " + destino.getDescripcion(), Color.BLUE);
         } else {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar productoras diferentes o válidas", "Error", JOptionPane.ERROR_MESSAGE);
+            showStatusMessage("Debe seleccionar productoras diferentes.", Color.RED);
         }
     }
 

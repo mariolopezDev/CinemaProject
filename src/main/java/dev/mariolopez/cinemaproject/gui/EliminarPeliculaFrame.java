@@ -8,34 +8,33 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class EliminarPeliculaFrame extends JFrame {
+public class EliminarPeliculaFrame extends BaseFrame {
     private JComboBox<Productora> cbProductoras;
     private JButton btnEliminar;
     private JTable tablaPeliculas;
     private DefaultTableModel modeloTabla;
 
     public EliminarPeliculaFrame() {
-        setTitle("Eliminar Películas");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-
+        super("Eliminar Películas", 600, 400);
         add(createSelectionPanel(), BorderLayout.NORTH);
         add(createTablePanel(), BorderLayout.CENTER);
+        
         pack();
-        setLocationRelativeTo(null);
+        updateProductoraComboBox();
     }
 
     private JPanel createSelectionPanel() {
-        JPanel panel = new JPanel(new GridLayout(1, 2));
+        JPanel panel = new JPanel(new GridLayout(1, 3));
         cbProductoras = new JComboBox<>();
         updateProductoraComboBox();
         cbProductoras.addActionListener(e -> updatePeliculaTable());
         panel.add(new JLabel("Seleccionar Productora:"));
         panel.add(cbProductoras);
+
         btnEliminar = new JButton("Eliminar Primera Película");
         btnEliminar.addActionListener(e -> eliminarPelicula());
         panel.add(btnEliminar);
+        
         return panel;
     }
 
@@ -50,18 +49,22 @@ public class EliminarPeliculaFrame extends JFrame {
         if (productoraSeleccionada != null) {
             Pelicula peliculaEliminada = productoraSeleccionada.dequeuePelicula();
             if (peliculaEliminada != null) {
-                JOptionPane.showMessageDialog(this, "Película eliminada: " + peliculaEliminada.getNombre(), "Operación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+                showStatusMessage("Película eliminada: " + peliculaEliminada.getNombre(), Color.RED);
                 updatePeliculaTable();
             } else {
-                JOptionPane.showMessageDialog(this, "No hay películas para eliminar en la productora seleccionada", "Error", JOptionPane.ERROR_MESSAGE);
+                showStatusMessage("Productora: " + productoraSeleccionada.getDescripcion() + " no tiene películas para eliminar.", Color.RED);
             }
+        } else {
+            showStatusMessage("No hay productoras para eliminar películas.", Color.BLUE);
         }
     }
 
     private void updateProductoraComboBox() {
         cbProductoras.removeAllItems();
         for (Productora productora : DataManager.getInstance().getProductoras()) {
-            cbProductoras.addItem(productora);
+            if (productora != null) {
+                cbProductoras.addItem(productora);
+            } 
         }
     }
 
@@ -72,9 +75,13 @@ public class EliminarPeliculaFrame extends JFrame {
             for (Pelicula pelicula : productora.getPeliculas()) {
                 if (pelicula != null) {
                     modeloTabla.addRow(new Object[]{pelicula.getDni(), pelicula.getNombre(), pelicula.getGenero(), pelicula.getTipoAudiencia()});
+                } else {
+                    showStatusMessage("No hay películas para mostrar.", Color.BLUE);
                 }
             }
-        }
+        } else if (cbProductoras.getItemCount() > 0) {
+            showStatusMessage("No hay productoras para mostrar.", Color.BLUE);
+        } 
     }
 
     @Override

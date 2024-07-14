@@ -21,7 +21,7 @@ public class DataManager {
     }
 
     public void addProductora(Productora productora) {
-        if (count == productoras.length) {
+        if (count >= productoras.length) {
             expandProductorasCapacity();
         }
         productoras[count++] = productora;
@@ -88,22 +88,30 @@ public class DataManager {
     //getNextProductoraId 
     // Retorna el siguiente ID disponible para una nueva productora
     public int getNextProductoraId() {
-        return count + 1;
+        if (count == 0) {
+            return 1; // Primer ID
+        } else
+            return productoras[count - 1].getId() + 1; // ID siguiente al último
     }
-
-
+    
     // removeLastProductora 
     // Elimina la última productora del arreglo si no tiene películas
+    // Método para eliminar la última productora si no tiene películas
     public boolean removeLastProductora() {
+        if (count == 0 || hasPeliculas()) {
+            return false; // No hay productoras o la última productora tiene películas
+        }
+        productoras[--count] = null; // Elimina la última productora
+        return true; // Productora eliminada con éxito
+    }
+
+    // Método para verificar si la última productora tiene películas
+    public boolean hasPeliculas() {
         if (count == 0) {
-            return false;
+            return false; // No hay productoras
         }
         Productora lastProductora = productoras[count - 1];
-        if (lastProductora.size() == 0) {
-            productoras[--count] = null;
-            return true;
-        }
-        return false;
+        return lastProductora.size() > 0; // Devuelve true si tiene películas, false si no
     }
 
 }
