@@ -13,21 +13,21 @@ public class DataManager {
         count = 0;
     }
 
-    public static DataManager getInstance() {
+    public static DataManager getInstance() { // Singleton
         if (instance == null) {
             instance = new DataManager();
         }
         return instance;
     }
 
-    public void addProductora(Productora productora) {
+    public void addProductora(Productora productora) {  // Agrega una productora al arreglo
         if (count >= productoras.length) {
             expandProductorasCapacity();
         }
         productoras[count++] = productora;
     }
 
-    public boolean removeProductora(int id) {
+    public boolean removeProductora(int id) { // Elimina una productora por ID
         for (int i = 0; i < count; i++) {
             if (productoras[i].getId() == id) {
                 productoras[i] = productoras[count - 1];
@@ -38,13 +38,13 @@ public class DataManager {
         return false;
     }
 
-    private void expandProductorasCapacity() {
+    private void expandProductorasCapacity() { // Duplica la capacidad del arreglo de productoras
         Productora[] newProductoras = new Productora[productoras.length * 2];
         System.arraycopy(productoras, 0, newProductoras, 0, count);
         productoras = newProductoras;
     }
 
-    public Productora getProductoraById(int id) {
+    public Productora getProductoraById(int id) { // Busca una productora por ID
         for (int i = 0; i < count; i++) {
             if (productoras[i].getId() == id) {
                 return productoras[i];
@@ -53,7 +53,7 @@ public class DataManager {
         return null;
     }
 
-    public void trasladarPeliculas(int idOrigen, int idDestino) {
+    public void trasladarPeliculas(int idOrigen, int idDestino) { // Traslada todas las películas de una productora a otra
         Productora origen = getProductoraById(idOrigen);
         Productora destino = getProductoraById(idDestino);
 
@@ -65,7 +65,7 @@ public class DataManager {
             // Handle error: productoras iguales
             return;
         }
-        for (int i = 0; i < origen.size(); i++) {
+        for (int i = 0; i < origen.size(); i++) { // Trasladar todas las películas
             Pelicula pelicula = origen.dequeuePelicula();
             if (pelicula != null) {
                 destino.enqueuePelicula(pelicula);

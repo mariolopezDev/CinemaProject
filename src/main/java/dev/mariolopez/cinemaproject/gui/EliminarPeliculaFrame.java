@@ -39,7 +39,7 @@ public class EliminarPeliculaFrame extends BaseFrame {
     }
 
     private JScrollPane createTablePanel() {
-        modeloTabla = new DefaultTableModel(new Object[]{"DNI", "Nombre", "Género", "Tipo de Audiencia"}, 0);
+        modeloTabla = new DefaultTableModel(new Object[]{"Id", "Nombre", "Género", "Tipo de Audiencia"}, 0);
         tablaPeliculas = new JTable(modeloTabla);
         return new JScrollPane(tablaPeliculas);
     }

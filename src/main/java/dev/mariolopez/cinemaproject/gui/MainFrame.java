@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
         setTitle("Sistema de Gestión de Productoras Cinematográficas");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10));  // Changed to BorderLayout
+        setLayout(new BorderLayout(10, 10));
 
         // Buttons Panel
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
