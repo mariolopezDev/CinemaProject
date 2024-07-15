@@ -44,7 +44,7 @@ public class TrasladarPeliculaFrame extends BaseFrame {
     }
 
     private JScrollPane createTablePanel() {
-        modeloTabla = new DefaultTableModel(new Object[]{"DNI", "Nombre", "Género", "Tipo de Audiencia"}, 0);
+        modeloTabla = new DefaultTableModel(new Object[]{"Id", "Nombre", "Género", "Tipo de Audiencia"}, 0);
         tablaPeliculasDestino = new JTable(modeloTabla);
         return new JScrollPane(tablaPeliculasDestino);
     }
